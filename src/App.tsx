@@ -10,11 +10,19 @@ function App() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file || !topic) return;
+    if (!file) {
+      console.error('No file selected');
+      return;
+    }
+    if (!topic) return;
 
     const formData = new FormData();
     formData.append('video', file);
-    formData.append('topic', topic);
+    formData.append('expected_topic', topic);
+
+    for (const [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
 
     try {
       const res = await axios.post(API_URL, formData, {
