@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { SpeedInsights } from "@vercel/speed-insights/react"; // เพิ่มบรรทัดนี้
 
 const API_URL = 'https://video-analyzer-api.onrender.com/analyze'; // เปลี่ยนเป็น endpoint จริง
 
@@ -44,45 +45,48 @@ function App() {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100" style={{ background: '#e9ecef' }}>
-      <div className="card p-4 shadow" style={{ minWidth: 350, maxWidth: 400, border: '2px solid #2563eb' }}>
-        <h3 className="mb-3 text-center">AI Video Analyzer</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="expected-topic">Expected Topic</label>
-            <input
-              id="expected-topic"
-              type="text"
-              className="form-control"
-              value={topic}
-              onChange={e => setTopic(e.target.value)}
-              placeholder="หัวข้อที่คาดหวัง"
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="upload-video">Upload Video</label>
-            <input
-              id="upload-video"
-              type="file"
-              className="form-control"
-              accept="video/*"
-              onChange={e => setFile(e.target.files?.[0] || null)}
-              required
-            />
-          </div>
-          <button className="btn btn-primary w-100" type="submit">Analyze</button>
-        </form>
-        {result && typeof result === 'object' && result !== null && 'score' in result && 'suggestion' in result ? (
-          <div className="alert alert-info mt-3">
-            <div>Score: {(result as AnalysisResultObj).score}</div>
-            <div>Suggestion: {(result as AnalysisResultObj).suggestion}</div>
-          </div>
-        ) : result && (
-          <div className="alert alert-info mt-3">{result}</div>
-        )}
+    <>
+      <SpeedInsights /> {/* เพิ่มตรงนี้ */}
+      <div className="d-flex justify-content-center align-items-center vh-100" style={{ background: '#e9ecef' }}>
+        <div className="card p-4 shadow" style={{ minWidth: 350, maxWidth: 400, border: '2px solid #2563eb' }}>
+          <h3 className="mb-3 text-center">AI Video Analyzer</h3>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="expected-topic">Expected Topic</label>
+              <input
+                id="expected-topic"
+                type="text"
+                className="form-control"
+                value={topic}
+                onChange={e => setTopic(e.target.value)}
+                placeholder="หัวข้อที่คาดหวัง"
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label" htmlFor="upload-video">Upload Video</label>
+              <input
+                id="upload-video"
+                type="file"
+                className="form-control"
+                accept="video/*"
+                onChange={e => setFile(e.target.files?.[0] || null)}
+                required
+              />
+            </div>
+            <button className="btn btn-primary w-100" type="submit">Analyze</button>
+          </form>
+          {result && typeof result === 'object' && result !== null && 'score' in result && 'suggestion' in result ? (
+            <div className="alert alert-info mt-3">
+              <div>Score: {(result as AnalysisResultObj).score}</div>
+              <div>Suggestion: {(result as AnalysisResultObj).suggestion}</div>
+            </div>
+          ) : result && (
+            <div className="alert alert-info mt-3">{result}</div>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
