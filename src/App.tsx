@@ -3,10 +3,16 @@ import axios from 'axios';
 
 const API_URL = 'https://video-analyzer-api.onrender.com/analyze'; // เปลี่ยนเป็น endpoint จริง
 
+type AnalysisResultObj = {
+  score: number;
+  suggestion: string;
+};
+type AnalysisResult = AnalysisResultObj | string | null;
+
 function App() {
   const [file, setFile] = useState<File | null>(null);
   const [topic, setTopic] = useState('');
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = React.useState<AnalysisResult>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,9 +31,7 @@ function App() {
     }
 
     try {
-      const res = await axios.post(API_URL, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const res = await axios.post(API_URL, formData);
       setResult(res.data.result);
     } catch (err) {
       console.error('Error during video analysis:', err);
@@ -65,7 +69,14 @@ function App() {
           </div>
           <button className="btn btn-primary w-100" type="submit">Analyze</button>
         </form>
-        {result && <div className="alert alert-info mt-3">{result}</div>}
+        {result && typeof result === 'object' && result !== null && 'score' in result && 'suggestion' in result ? (
+          <div className="alert alert-info mt-3">
+            <div>Score: {(result as AnalysisResultObj).score}</div>
+            <div>Suggestion: {(result as AnalysisResultObj).suggestion}</div>
+          </div>
+        ) : result && (
+          <div className="alert alert-info mt-3">{result}</div>
+        )}
       </div>
     </div>
   );
