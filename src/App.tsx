@@ -30,8 +30,12 @@ function App() {
       console.log(`${key}:`, value);
     }
 
+    console.log('file:', file);
+    console.log('topic:', topic);
+    console.log('file instanceof File:', file instanceof File);
+
     try {
-      const res = await axios.post(API_URL, formData);
+      const res = await axios.post(API_URL, formData); // ไม่ต้องใส่ headers
       setResult(res.data.result);
     } catch (err) {
       console.error('Error during video analysis:', err);
